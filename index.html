@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --primary-dark: #5649c0;
+            --first-half: #6c5ce7;
+            --second-half: #ff7675;
+            --success: #00b894;
+            --success-bg: rgba(0, 184, 148, 0.2);
+            --danger: #ff7675;
+            --danger-bg: rgba(255, 118, 117, 0.2);
+            --warning: #fdcb6e;
+            --warning-bg: rgba(253, 203, 110, 0.2);
+            --secondary: #636e72;
+            --secondary-light: rgba(99, 110, 114, 0.1);
+            --text-primary: #2d3436;
+            --text-secondary: #636e72;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --border-color: #dfe6e9;
+            --footer-color: #b2bec3;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] {
+            --primary: #7d6bff;
+            --primary-light: #5a4ac5;
+            --primary-dark: #9a86ff;
+            --first-half: #7d6bff;
+            --second-half: #ff7675;
+            --success: #039680;
+            --success-bg: rgba(3, 150, 128, 0.2);
+            --danger: #ff7675;
+            --danger-bg: rgba(255, 118, 117, 0.2);
+            --warning: #faac05;
+            --warning-bg: rgba(250, 172, 5, 0.2);
+            --secondary: #b2bec3;
+            --secondary-light: rgba(178, 190, 195, 0.15);
+            --text-primary: #f5f6fa;
+            --text-secondary: #dfe6e9;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --border-color: #2d3436;
+            --footer-color: #636e72;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-primary);
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .tool-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+        }
+
+        .btn {
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #00a884;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e66767;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-light);
+            color: var(--secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-logout {
+            position: absolute;
+            top: 20px;
+            right: 70px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+
+        .admin-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .date-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .half-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tab.active.first-half {
+            background: var(--first-half);
+            color: white;
+            border-color: var(--first-half);
+        }
+
+        .tab.active.second-half {
+            background: var(--second-half);
+            color: white;
+            border-color: var(--second-half);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+
+        .status-message {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status-success {
+            background: var(--success-bg);
+            color: var(--success);
+            border: 1px solid var(--success);
+            display: block;
+        }
+
+        .status-error {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            color: var(--footer-color);
+            font-size: 0.8rem;
+            padding: 15px 0;
+        }
+
+        /* Table Styles */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .data-table th {
+            background: #2c5cc5;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        [data-theme="dark"] .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .editable-cell {
+            padding: 4px;
+            min-width: 40px;
+            text-align: center;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .editable-cell:focus {
+            outline: 2px solid var(--primary);
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+        }
+
+        .save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .save-btn:hover {
+            background: #00a884;
+        }
+
+        .save-btn.saved {
+            background: var(--primary);
+        }
+
+        .add-agent-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .add-agent-input {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .add-agent-form {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .tool-container {
+                padding: 15px;
+            }
+            
+            .btn-logout {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 15px;
+                width: 100%;
+            }
+            
+            .half-tabs, .filter-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-cog"></i> Admin Panel</h1>
+            <p>View and manage agent reports</p>
+        </div>
+
+        <div class="tool-container" id="loginContainer">
+            <div class="login-container">
+                <div class="login-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h2>Admin Login</h2>
+                <div class="login-form">
+                    <div class="form-group">
+                        <label for="adminId">Admin ID</label>
+                        <input type="number" id="adminId" class="form-input" placeholder="Enter admin ID" onkeypress="handleKeyPress(event)">
+                    </div>
+                    <button class="btn btn-primary" onclick="loginAdmin()">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="tool-container" id="adminContainer" style="display: none;">
+            <button class="btn btn-danger btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+            
+            <h2>Agent Reports</h2>
+            
+            <div class="admin-controls">
+                <div class="date-selector">
+                    <label for="datePicker">Select Date:</label>
+                    <input type="date" id="datePicker" class="form-input">
+                </div>
+                
+                <button class="btn btn-primary" onclick="loadReports()">
+                    <i class="fas fa-sync-alt"></i> Load Data
+                </button>
+                
+                <button class="btn btn-success" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i> Copy Data
+                </button>
+            </div>
+            
+            <div class="half-tabs">
+                <div class="tab first-half active" data-half="first" onclick="selectHalf('first')">First Half (10AM - 2PM)</div>
+                <div class="tab second-half" data-half="second" onclick="selectHalf('second')">Second Half (2PM - 10PM)</div>
+            </div>
+            
+            <div class="filter-tabs">
+                <div class="tab active" data-filter="all" onclick="filterReports('all')">All</div>
+                <div class="tab" data-filter="submitted" onclick="filterReports('submitted')">Submitted</div>
+                <div class="tab" data-filter="pending" onclick="filterReports('pending')">Pending</div>
+            </div>
+            
+            <div class="add-agent-form">
+                <input type="number" id="newAgentId" class="add-agent-input" placeholder="Agent ID">
+                <input type="text" id="newAgentName" class="add-agent-input" placeholder="Agent Name">
+                <button class="btn btn-secondary" onclick="addNewAgent()">
+                    <i class="fas fa-plus"></i> Add Agent
+                </button>
+            </div>
+            
+            <div id="statusMessage" class="status-message"></div>
+            
+            <div class="table-container">
+                <table class="data-table" id="reportsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Team Leader</th>
+                            <th>Attendance</th>
+                            <th>Total Connected Calls</th>
+                            <th>Total Orders Placed</th>
+                            <th>Successful</th>
+                            <th>Pending</th>
+                            <th>Cancelled</th>
+                            <th>Overwritten</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="11" style="text-align: center; padding: 20px;">No data available. Select a date and click Load Data.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © Admin Panel 2025
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCnhVN4BJTeOiDWpuL_eVPQLjIy9DXqB5A",
+            authDomain: "agentrp.firebaseapp.com",
+            projectId: "agentrp",
+            storageBucket: "agentrp.firebasestorage.app",
+            messagingSenderId: "930887247422",
+            appId: "1:930887247422:web:c0281d3500fa2b0b5dd36f"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        let currentHalf = 'first';
+        let currentFilter = 'all';
+        let isDarkMode = false;
+        let isAdminLoggedIn = false;
+        let allReports = [];
+        let allAgents = [];
+        
+        // Set up date picker with restrictions
+        document.addEventListener('DOMContentLoaded', function() {
+            const datePicker = document.getElementById('datePicker');
+            const today = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(today.getDate() - 7);
+            
+            // Set max date to today
+            datePicker.max = today.toISOString().split('T')[0];
+            
+            // Set min date to 7 days ago
+            datePicker.min = sevenDaysAgo.toISOString().split('T')[0];
+            
+            // Set default value to today
+            datePicker.value = today.toISOString().split('T')[0];
+            
+            // Set default half based on current time
+            setDefaultHalf();
+            
+            // Check for saved theme preference
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                enableDarkMode();
+            }
+            
+            // Check if admin is already logged in
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                isAdminLoggedIn = true;
+                showAdminUI();
+                loadAgents();
+            }
+        });
+        
+        // Set default half based on current time
+        function setDefaultHalf() {
+            const now = new Date();
+            const hours = now.getHours();
+            
+            if (hours >= 14 && hours < 22) {
+                // 2PM to 10PM - Second half
+                selectHalf('second');
+            } else {
+                // Default to first half
+                selectHalf('first');
+            }
+        }
+        
+        // Theme toggle functionality
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                enableDarkMode();
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                disableDarkMode();
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+        
+        function enableDarkMode() {
+            document.body.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            isDarkMode = true;
+        }
+        
+        function disableDarkMode() {
+            document.body.removeAttribute('data-theme');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i>';
+            isDarkMode = false;
+        }
+        
+        function selectHalf(half) {
+            currentHalf = half;
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            const activeTab = document.querySelector(`.half-tabs [data-half="${half}"]`);
+            activeTab.classList.add('active');
+            
+            if (half === 'first') {
+                activeTab.style.background = 'var(--first-half)';
+            } else {
+                activeTab.style.background = 'var(--second-half)';
+            }
+            
+            if (isAdminLoggedIn) {
+                loadReports();
+            }
+        }
+        
+        function filterReports(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.filter-tabs [data-filter="${filter}"]`).classList.add('active');
+            
+            renderReportsTable();
+        }
+        
+        function showLoginUI() {
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('adminContainer').style.display = 'none';
+            isAdminLoggedIn = false;
+            localStorage.removeItem('adminLoggedIn');
+        }
+        
+        function showAdminUI() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminContainer').style.display = 'block';
+        }
+        
+        function showStatus(message, isSuccess) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = isSuccess ? 'status-message status-success' : 'status-message status-error';
+            
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                loginAdmin();
+            }
+        }
+        
+        function loginAdmin() {
+            const adminId = document.getElementById('adminId').value;
+            
+            if (!adminId) {
+                showStatus('Please enter Admin ID', false);
+                return;
+            }
+            
+            // Simple admin authentication (ID 2267 is admin)
+            if (adminId === '2267') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('adminLoggedIn', 'true');
+                showAdminUI();
+                loadAgents();
+                showStatus('Admin login successful!', true);
+            } else {
+                showStatus('Invalid Admin ID', false);
+            }
+        }
+        
+        function logout() {
+            showLoginUI();
+        }
+        
+        function loadAgents() {
+            // In a real app, you would load agents from Firestore
+            // For demo purposes, we'll use mock data
+            allAgents = [
+                { id: 44715, name: "Awais Ur Rehman", teamLeader: "Shehzad Qayyum" },
+                { id: 45992, name: "Saima Sher Muhammad", teamLeader: "Shehzad Qayyum" },
+                { id: 48618, name: "Abbas Raheem", teamLeader: "Shehzad Qayyum" },
+                { id: 48123, name: "Aqsa Noreen", teamLeader: "Shehzad Qayyum" },
+                { id: 46958, name: "Khadija Sarwar", teamLeader: "Shehzad Qayyum" },
+                { id: 48362, name: "Safoora Nawaz", teamLeader: "Shehzad Qayyum" },
+                { id: 48396, name: "Raheela Butt", teamLeader: "Shehzad Qayyum" },
+                { id: 43207, name: "Mehreen Akhter", teamLeader: "Shehzad Qayyum" },
+                { id: 2413, name: "Muhammad Shahbaz", teamLeader: "Shehzad Qayyum" },
+                { id: 2267, name: "Salma Hameed - TC", teamLeader: "Shehzad Qayyum" },
+                { id: 2681, name: "Maryam Afshan", teamLeader: "Shehzad Qayyum" },
+                { id: 48863, name: "Saqlain Mushtaq", teamLeader: "Shehzad Qayyum" },
+                { id: 48638, name: "Nadia Manzoor", teamLeader: "Shehzad Qayyum" },
+                { id: 48795, name: "Amamah Rehman", teamLeader: "Shehzad Qayyum" },
+                { id: 2681, name: "Maryum Afshan", teamLeader: "Shehzad Qayyum" },
+                { id: 43810, name: "Syed Hamza Ahmed", teamLeader: "Shehzad Qayyum" },
+                { id: 46351, name: "Maryam Mukhtiar", teamLeader: "Shehzad Qayyum" },
+                { id: 54870, name: "Rizwan Ali", teamLeader: "Shehzad Qayyum" },
+                { id: 4937, name: "Ali Raza", teamLeader: "Shehzad Qayyum" },
+                { id: 2547, name: "Shahnaz Gul", teamLeader: "Shehzad Qayyum" },
+                { id: 48718, name: "Ahsan Mazhar", teamLeader: "Shehzad Qayyum" },
+                { id: 49087, name: "Iqra Rasool", teamLeader: "Shehzad Qayyum" },
+                { id: 49219, name: "Asma Anwar Khan", teamLeader: "Shehzad Qayyum" },
+                { id: 43930, name: "Rida Fatima", teamLeader: "Shehzad Qayyum" },
+                { id: 48194, name: "Ahmed Jahangir Baig", teamLeader: "Shehzad Qayyum" },
+                { id: 48668, name: "Romeesa Shaheen", teamLeader: "Shehzad Qayyum" },
+                { id: 49271, name: "Farhat Batool", teamLeader: "Shehzad Qayyum" },
+                { id: 49184, name: "Zeeshan Shakoor", teamLeader: "Shehzad Qayyum" },
+                { id: 49218, name: "Aleena Ahmed", teamLeader: "Shehzad Qayyum" },
+                { id: 49331, name: "Muhammad Touqeer", teamLeader: "Shehzad Qayyum" }
+            ];
+        }
+        
+        function addNewAgent() {
+            const newAgentId = document.getElementById('newAgentId').value;
+            const newAgentName = document.getElementById('newAgentName').value;
+            
+            if (!newAgentId || !newAgentName) {
+                showStatus('Please enter both Agent ID and Name', false);
+                return;
+            }
+            
+            // Add to agents list
+            allAgents.push({
+                id: parseInt(newAgentId),
+                name: newAgentName,
+                teamLeader: "Shehzad Qayyum"
+            });
+            
+            // Clear input fields
+            document.getElementById('newAgentId').value = '';
+            document.getElementById('newAgentName').value = '';
+            
+            // Re-render table
+            renderReportsTable();
+            
+            showStatus(`Agent ${newAgentName} added successfully!`, true);
+        }
+        
+        function loadReports() {
+            const selectedDate = document.getElementById('datePicker').value;
+            
+            if (!selectedDate) {
+                showStatus('Please select a date', false);
+                return;
+            }
+            
+            const reportsRef = db.collection('reports')
+                .where('date', '==', selectedDate)
+                .where('half', '==', currentHalf);
+            
+            reportsRef.get().then(snapshot => {
+                allReports = [];
+                snapshot.forEach(doc => {
+                    allReports.push(doc.data());
+                });
+                
+                renderReportsTable();
+                showStatus(`Loaded ${allReports.length} reports for ${selectedDate} (${currentHalf} half)`, true);
+            }).catch(error => {
+                console.error('Error loading reports:', error);
+                showStatus('Error loading reports: ' + error.message, false);
+            });
+        }
+        
+        function renderReportsTable() {
+            const tableBody = document.querySelector('#reportsTable tbody');
+            
+            if (allAgents.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 20px;">No agents available.</td></tr>';
+                return;
+            }
+            
+            let tableHTML = '';
+            
+            allAgents.forEach(agent => {
+                // Find report for this agent
+                const report = allReports.find(r => r.agentId === agent.id);
+                const hasReport = !!report;
+                
+                // Apply filters
+                if (currentFilter === 'submitted' && !hasReport) return;
+                if (currentFilter === 'pending' && hasReport) return;
+                
+                tableHTML += `
+                    <tr>
+                        <td>${agent.id}</td>
+                        <td>${agent.name}</td>
+                        <td>${agent.teamLeader}</td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="attendance" data-agent-id="${agent.id}">${hasReport ? (report.attendance || '-') : '-'}</span></td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="connectedCalls" data-agent-id="${agent.id}">${hasReport ? (report.connectedCalls || '-') : '-'}</span></td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="ordersPlaced" data-agent-id="${agent.id}">${hasReport ? (report.ordersPlaced || '-') : '-'}</span></td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="successful" data-agent-id="${agent.id}">${hasReport ? (report.successful || '-') : '-'}</span></td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="pending" data-agent-id="${agent.id}">${hasReport ? (report.pending || '-') : '-'}</span></td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="cancelled" data-agent-id="${agent.id}">${hasReport ? (report.cancelled || '-') : '-'}</span></td>
+                        <td><span class="editable-cell" contenteditable="true" data-field="overwritten" data-agent-id="${agent.id}">${hasReport ? (report.overwritten || '-') : '-'}</span></td>
+                        <td>
+                            <button class="save-btn" onclick="saveAgentData(${agent.id})">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            if (tableHTML === '') {
+                tableHTML = '<tr><td colspan="11" style="text-align: center; padding: 20px;">No data matches the selected filter.</td></tr>';
+            }
+            
+            tableBody.innerHTML = tableHTML;
+        }
+        
+        function saveAgentData(agentId) {
+            // In a real app, you would save this to Firestore
+            showStatus(`Data for agent ${agentId} saved successfully!`, true);
+            
+            // Show save animation
+            const saveBtn = event.currentTarget;
+            saveBtn.classList.add('saved');
+            saveBtn.innerHTML = '<i class="fas fa-check"></i>';
+            
+            setTimeout(() => {
+                saveBtn.classList.remove('saved');
+                saveBtn.innerHTML = '<i class="fas fa-save"></i>';
+            }, 2000);
+        }
+        
+        function copyToClipboard() {
+            if (allAgents.length === 0) {
+                showStatus('No data to copy', false);
+                return;
+            }
+            
+            // Create CSV content with Excel formatting
+            let csvContent = "ID\tName\tTeamleader\tAttendance\tTotal Connected Calls\tTotal Orders Placed\tSuccessful\tPending\tCanceled\tOverwritten\n";
+            
+            allAgents.forEach(agent => {
+                // Find report for this agent
+                const report = allReports.find(r => r.agentId === agent.id);
+                
+                csvContent += `${agent.id}\t${agent.name}\t${agent.teamLeader}\t`;
+                csvContent += `${report ? (report.attendance || '-') : '-'}\t`;
+                csvContent += `${report ? (report.connectedCalls || '-') : '-'}\t`;
+                csvContent += `${report ? (report.ordersPlaced || '-') : '-'}\t`;
+                csvContent += `${report ? (report.successful || '-') : '-'}\t`;
+                csvContent += `${report ? (report.pending || '-') : '-'}\t`;
+                csvContent += `${report ? (report.cancelled || '-') : '-'}\t`;
+                csvContent += `${report ? (report.overwritten || '-') : '-'}\n`;
+            });
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(csvContent).then(() => {
+                showStatus('Data copied to clipboard in Excel format!', true);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                showStatus('Failed to copy data to clipboard', false);
+            });
+        }
+    </script>
+</body>
+</html>
